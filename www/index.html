@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>SMS Tactics</title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script UNCOMMENT to BUILD for iOS and Android!!-->
+    <script src="cordova.js"></script>
+    <script src="js/ng-cordova.min.js"></script>
+    <script src="js/ngStorage.min.js"></script>
+    <script src="js/ngletteravatar.js"></script>
+
+
+    <!-- your app's js -->
+
+    <script src="js/app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/jquery-1.9.js"></script>
+    <script src="js/require.js"></script>
+  
+  <!--
+   <script type="text/javascript"
+src="//static.twilio.com/libs/twiliojs/1.2/twilio.min.js"></script>
+-->
+
+  </head>
+  <style>
+
+.item-image{max-width:62px !important; max-height:62px !important; top:10px !important;border-radius: 50px;}
+
+
+  .item img {
+  height: 60px;
+  width: 60px;
+  float: left;
+  margin-top: 20px;
+  margin-right: 10px;
+
+}
+
+.bar-stable {
+
+ background-color: rgba(255,255,255,.6) !important;
+
+}
+
+.item-options {
+  z-index:999;
+}
+
+
+.scroll-content{
+
+
+  
+  background: linear-gradient(15deg,#c14949, #8177d2);
+}
+
+
+.item-content,#transparent >.list >.item{
+margin-right:-15px;
+background-color: rgba(0,0,0,.08) !important;
+
+
+}
+
+.losestate {
+color:#FF6666 !important;
+}
+
+.winstate {
+color:#99CCFF !important;
+}
+
+.pendingstate {
+
+color:#FFFF66 !important;
+}
+
+.activestate {
+
+  color:#99FF99 !important;
+}
+
+.textpaddingtop{
+
+padding-top:20px !important;
+
+}
+
+.notextpaddingtop{
+  padding-top:0px !important;
+}
+
+/* 
+.bar{
+background-color: rgba(0,0,0,.4) !important;
+
+}
+*/
+
+.item-divider {background-color: rgba(200,200,200,.7)}
+
+.item:not(.item-divider) {background-color: rgba(250,250,250,.95) !important};
+
+  </style>
+
+  <body  ng-app="starter" ng-controller="AppCtrl" ng-cloak >
+
+
+<ion-side-menus>
+
+  <ion-side-menu-content drag-content="false">
+    <ion-nav-bar class="bar-stable">
+
+    <ion-nav-title style="margin-left:50px;font-size:24px">
+      <b>SMS</b> Tactics
+    </ion-nav-title>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-large button-icon button-clear ion-android-menu" menu-toggle>
+        </button>
+      </ion-nav-buttons>
+
+       <ion-nav-buttons side="right" >
+
+     
+        <button class="button button-icon ion-android-add" ng-class="{'animateddelay tada infinite':!games.length}" ng-click="addcontact()"></button><!--addcontact()-->
+
+
+      </ion-nav-buttons>
+     
+    </ion-nav-bar>
+
+
+
+
+<ion-content style="padding-top:43px" overflow-scroll="true">
+
+
+  <ion-list id="transparent">
+
+      <ion-item ng-repeat="game in games" ng-cloak style="font-size:16px" ng-click="guess({{$index}})">
+    
+      <img ng-src="{{game.avatar}}" class="item-image" style="margin-top:0px;z-index:3000">
+
+      <span style="position:absolute;top:-4px;left:16px;z-index:-300">
+      <ng-letter-avatar data="{{game.name}}" shape="round"></ng-letter-avatar>
+      </span>
+      <div style="margin-left:3.5em;padding-top:5px;color:white">
+      <span style="font-size:12px">Game with</span> <span style="font-size:18px">{{game.name}} <span>
+
+       <span style="font-size:11px;float:right;">
+      {{game.created | date: 'MM'}}/{{game.created | date: 'dd'}}/{{game.created | date: 'yy'}}
+      </span>
+</div>
+<div style="margin-left:3.5em;margin-top:5px;color:white">
+
+<!-- ng-if="!({{game.stat}}=='pending'" -->
+      <span style="font-size:12px"> winword:</span> <span style="font-size:21px;color:#FF6666">{{game.yWW[0]}} </span><!--LoseWord: {{game.yLW[0]}}-->
+     <span style="float:right;font-size:14px;color:black" ng-class="{'animated pulse infinite activestate':game.stat=='active','pendingstate':game.stat=='pending','winstate':game.stat=='win','losestate':game.stat=='loss'}">
+      {{game.stat}}
+      <span>
+      </div>
+
+<!--
+ <button class="button button-block button-positive" ng-if="!options.input" ng-cloak ng-click="newgame()">
+  New Game? ;color:#99FF99
+</button>
+-->
+
+<ion-option-button class="button-assertive" style="right:14px;z-index:"ng-click="delete(game)">
+         <span class="animateddelay pulse infinite"> Delete </span>
+        </ion-option-button>
+
+</ion-item>
+</ion-list>
+
+<div ng-switch on="games.length" >
+<div style="text-align:center" ng-switch-when="0" ng-cloak>
+ <img src="img/arrow35.png" style="position:absolute;width:16%;opacity:.9;left:84vw" class="padding"></img>
+ <img src="img/SMS_Tactics2.png" style="width:72%;padding-bottom:1.3vh" class="padding"></img>
+</div>
+</div>
+<!--
+<div ng-switch on="games.length==1 && games[0].stat=='pending'">
+ <div class="animated fadeIn padding" ng-switch-when="true" ng-cloak style="color:white;font-size:2.3vh;line-height:130%;text-indent:20px;padding-bottom:30px">
+  ** Still <span style="color:yellow">pending </span> even after your contact responds? <b><a href="">Try this</a></b>
+</div>
+</div>
+-->
+<div ng-switch on="games.length<3">
+<div class="padding" ng-class="{'textpaddingtop':games.length,'notextpaddingtop':!games.length}" ng-switch-when="true" ng-cloak style="color:white;font-size:2.7vh;line-height:130%;text-indent:20px" >
+  Welcome to <b>SMS Tactics</b>! Add a contact to invite them to a game. If they accept, you will both be given a WinWord. If you get your contact to text your WinWord, (or you guess the word they're trying to get you to say) you win! There's no time limit, and the game works passivley in the background, checking your texts for these words. Your privacy is preserved 100% as none of your texts are saved, stored or made accessible to anyone in any way. Best of all, your friend doesn't need to download the game, they only need to text you back!
+</div>
+</div>
+
+</ion-content>
+    
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left">
+
+
+    
+    <ion-content has-bouncing="false">
+    
+ 
+      <ion-list>
+ 
+
+       
+
+  <div class="item item-divider">
+    Options
+  </div>
+
+    <label class="item item-input item-select menu-bar">
+    <div class="input-label">
+    Word Difficulty
+    </div>
+    <select style="background-color:transparent" class="menu-bar" ng-model="opt.difficulty" ng-init="opt.difficulty = 1.7">
+      <option value="1.7" selected>Easy</option>
+      <option value="1">Medium</option>
+      <option value="0.6" >Hard</option>
+    </select>
+  </label> 
+
+      <label class="item item-input item-select menu-bar">
+    <div class="input-label">
+    Handicap
+    </div>
+    <select  style="background-color:transparent" class="menu-bar" ng-model="opt.bias" ng-init="opt.bias = 0">
+      <option value=1 >Easier for Opponent</option>
+      <option value=0 selected>Even</option>
+      <option value=2 >Easier for You</option>
+    </select>
+  </label> 
+      <ion-list>
+
+      <ion-item menu-close ng-click="smstacticsweb()">
+          How to Play
+      <span class="item-note ion-chevron-right"></span>
+    
+      </ion-item>
+
+      </ion-list>
+<!--
+      <ion-list>
+
+      <ion-item menu-close ng-click="challengebutton()">
+          Privacy Policy
+      <span class="item-note ion-chevron-right"></span>
+    
+      </ion-item>
+
+      </ion-list>
+  -->
+
+       
+    <div class="item item-divider">
+    Other
+  </div>
+
+      <ion-list>
+        <ion-item menu-close ng-click="synonymy()">
+       
+<img src="img/128.png" style="position:absolute;height:35px;width:35px;top:-10px;left:15px">
+                 <span style="padding-left:45px">
+
+                Synonymy
+                </span>
+         <span class="item-note ion-chevron-right"></span>
+      </ion-item>
+      </ion-list>
+     <ion-list>
+        <ion-item menu-close ng-click="birdsupstairs()">
+
+ <img src="img/birds.png" style="position:absolute;height:35px;width:35px;top:-10px;left:15px">
+            <span style="padding-left:45px">
+    
+                The Birds Upstairs
+                </span>
+         <span class="item-note ion-chevron-right"></span>
+      </ion-item>
+      </ion-list>
+
+           <ion-list>
+        <ion-item menu-close ng-click="iconic()">
+
+ <img src="img/Iconic.png" style="position:absolute;height:35px;width:35px;top:-10px;left:15px">
+      <span style="padding-left:45px">
+   
+                Iconic Passwords
+                </span>
+         <span class="item-note ion-chevron-right"></span>
+      </ion-item>
+      </ion-list>
+
+              <ion-list>
+        <ion-item menu-close ng-click="wordunknown()">
+
+ <img src="img/wordunknown.png" style="position:absolute;height:35px;width:35px;top:-10px;left:15px">
+ <span style="padding-left:45px">
+                Word Unknown
+                </span>
+         <span class="item-note ion-chevron-right"></span>
+      </ion-item>
+      </ion-list>
+
+             <ion-list>
+        <ion-item menu-close ng-click="jarvisfilms()">
+
+ <img src="img/headshot128.png" style="position:absolute;height:35px;width:35px;top:-10px;left:15px">
+               <span style="padding-left:45px">
+
+                About the Author
+                </span>
+         <span class="item-note ion-chevron-right"></span>
+      </ion-item>
+      </ion-list>
+
+
+
+      <br>
+      <div style="text-align:center">
+
+      <img ng-click="facebook()" src="img/2.svg" class="pointer" style="width:40px">
+      <img ng-click="twitter()" src="img/1.svg" class="pointer" style="width:40px">
+      <img ng-click="stumbleupon()" class="pointer" src="img/webicon-stumbleupon.svg" style="width:40px">
+      <img ng-click="github()" class="pointer" src="img/github.svg" style="width:40px">
+      <br>
+
+
+      </div>
+
+         <div style="font-size:8px;text-align:center;line-height:15px;color:white">
+Copyright 2017 Christopher Cinq-Mars Jarvis
+</div>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>
+  </body>
+
+</html>
